@@ -1,0 +1,17 @@
+# docker-compose.yml
+
+version: '3.8'
+services:
+  db:
+    container_name: todo_db
+    image: postgres:14
+    restart: always
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    env_file:
+      - .env
+
+volumes:
+  db-data: {}
