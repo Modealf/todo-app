@@ -8,11 +8,11 @@ const prisma = new PrismaClient();
 async function main() {
   // create two dummy articles
   const user1 = await prisma.user.upsert({
-    where: { email: 'modelf@email.com' },
+    where: { email: 'Modealf@email.com' },
     update: {},
     create: {
-      email: 'modelf@email.com',
-      name: 'Modelf',
+      email: 'Modealf@email.com',
+      name: 'Modealf',
       password: '',
     },
   });
