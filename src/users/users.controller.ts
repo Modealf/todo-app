@@ -1,28 +1,25 @@
 import { Controller, Get, Post } from '@nestjs/common';
-
+import { PrismaService } from '../prisma/prisma.service';
+import { UsersService } from './users.service';
 @Controller('users')
 export class UsersController {
-    @Post('signup')
-    signUp(): string {
+  constructor(
+    private prisma: PrismaService,
+    private usersService: UsersService,
+  ) {}
 
-        return 'user has been created';
-    }
+  @Post('signup')
+  signUp(): string {
+    return 'user has been created';
+  }
 
+  signIn() {
+    return this.usersService.signIn();
+  }
 
-    signIn(){
-        
-    }
+  //   getUser() {}
 
-    getUser(){
-        
-    }
+  //   deleteUser() {}
 
-    deleteUser(){
-        
-    }
-    
-    updateUser(){
-     
-    }
-
+  //   updateUser() {}
 }
