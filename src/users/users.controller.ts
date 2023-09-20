@@ -8,17 +8,17 @@ export class UsersController {
     private usersService: UsersService,
   ) {}
 
-//   @Post('signup')
-//   signUp(): string {
-//     return 'user has been created';
-//   }
+  //   @Post('signup')
+  //   signUp(): string {
+  //     return 'user has been created';
+  //   }
 
-//   signIn() {
-//     return this.usersService.signIn();
-//   }
+  //   signIn() {
+  //     return this.usersService.signIn();
+  //   }
 
-    @Get('')
-    getUserInformation() {}
+  // @Get('')
+  // getUserInformation() {}
 
   //   deleteUser() {}
 
