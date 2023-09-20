@@ -17,8 +17,10 @@ export class UsersController {
   //     return this.usersService.signIn();
   //   }
 
-  // @Get('')
-  // getUserInformation() {}
+  @Get('')
+  getUserInformation(pri) {
+    return this.usersService.getUserInformation(userId: string);
+  }
 
   //   deleteUser() {}
 

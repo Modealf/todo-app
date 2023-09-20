@@ -25,4 +25,8 @@ export class UsersService {
   //     }
 
   // }
+
+  async getUserInformation(userId: string){
+    return await this.prisma.user.findUnique(userId);
+  }
 }
