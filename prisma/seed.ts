@@ -12,7 +12,8 @@ async function main() {
     update: {},
     create: {
       email: 'Modealf@email.com',
-      name: 'Modealf',
+      firstName: 'Modealf',
+      lastName: 'm',
       password: '',
     },
   });
@@ -22,7 +23,8 @@ async function main() {
     update: {},
     create: {
       email: 'azoz@email.com',
-      name: 'Azoz',
+      firstName: 'Azoz',
+      lastName: 'A',
       password: '',
     },
   });

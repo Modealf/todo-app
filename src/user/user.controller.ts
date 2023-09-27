@@ -8,10 +8,22 @@ export class userController {
     private userService: userService,
   ) {}
 
-  //   @Post('signup')
-  //   signUp(): string {
-  //     return 'user has been created';
-  //   }
+  @Post('signup')
+  signUp(
+    @Query('userEmail') userEmail: string,
+    @Query('userPassword') userPassword: string,
+    @Query('userFirstName') userFirstName: string,
+    @Query('userLastName') userLastName: string,
+    @Query('DOB') userDOB: string,
+  ) {
+    return this.userService.createUser(
+      userEmail,
+      userPassword,
+      userFirstName,
+      userLastName,
+      userDOB,
+    );
+  }
 
   //   signIn() {
   //     return this.userService.signIn();

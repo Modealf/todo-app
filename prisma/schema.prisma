@@ -9,13 +9,15 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  email     String   @unique
-  name      String
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  todos     Todos[]
+  id                String   @id @default(uuid())
+  email             String   @unique
+  firstName         String
+  lastName          String
+  dateOfBirth       String
+  password          String
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  todos             Todos[]
 }
 
 model Todos {
