@@ -1,27 +1,23 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+import * as argon2 from 'argon2';
 
 @Injectable()
 export class userService {
   constructor(private prisma: PrismaService) {}
   // you need to import prisma in your user service and your user module
 
-  async createUser(
-    userEmail: string,
-    userPassword: string,
-    userFirstName: string,
-    userLastName: string,
-    DOB?: string,
-  ) {
+  async createUser(userInfo: any) {
     try {
+      const hash = await argon2.hash(userInfo.userPassword);
       return await this.prisma.user.create({
         data: {
-          email: userEmail,
-          password: userPassword,
-          firstName: userFirstName,
-          lastName: userLastName,
-          dateOfBirth: DOB ?? '',
+          email: userInfo.userEmail,
+          password: hash,
+          firstName: userInfo.userFirstName,
+          lastName: userInfo.userLastName,
+          dateOfBirth: userInfo.DOB ?? '',
         },
       });
     } catch (error) {
@@ -57,6 +53,71 @@ export class userService {
   //         return
   //     }
 
+  // }
+
+  async deleteUser(userId: string) {
+    try {
+      return await this.prisma.user.delete({
+        where: {
+          id: userId,
+        },
+      });
+    } catch (error) {
+      throw new HttpException(
+        'failed to delete the user',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+  // I dont need this anymore
+  // async getUserId(userEmail: string) {
+  //   try {
+  //     return await this.prisma.user.findUniqueOrThrow({
+  //       where: {
+  //         email: userEmail,
+  //       },
+  //       select: {
+  //         id: true,
+  //       },
+  //     });
+  //   } catch (error) {
+  //     throw new HttpException(
+  //       'failed to find the user',
+  //       HttpStatus.BAD_REQUEST,
+  //     );
+  //   }
+  // }
+
+  // we will use jwt tokens to get the user id
+  async updateUserInfo(userId: string, userInfo: any) {
+    try {
+      const hash = await argon2.hash(userInfo.userPassword);
+      return await this.prisma.user.update({
+        where: {
+          id: userId,
+        },
+        data: {
+          email: userInfo.userEmail,
+          password: hash,
+          firstName: userInfo.userFirstName,
+          lastName: userInfo.userLastName,
+          dateOfBirth: userInfo.DOB ?? '',
+        },
+      });
+    } catch (error) {
+      throw new HttpException(
+        'failed to update the user',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  // nvm we dont need this anymore
+  // async changePassword(userId: string, oldPassword: string, newPassword: string) {
+  //   try {
+  //     if(await argon2.verify(oldPassword, (await this.getUserInformation(userId)).password)
+  //   } catch (error) {
+  //   }
   // }
 
   async getUserInformation(userId: string) {

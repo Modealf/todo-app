@@ -1,6 +1,8 @@
-import { Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { userService } from './user.service';
+import { userInfo } from 'os';
+
 @Controller('user')
 export class userController {
   constructor(
@@ -9,20 +11,8 @@ export class userController {
   ) {}
 
   @Post('signup')
-  signUp(
-    @Query('userEmail') userEmail: string,
-    @Query('userPassword') userPassword: string,
-    @Query('userFirstName') userFirstName: string,
-    @Query('userLastName') userLastName: string,
-    @Query('DOB') userDOB: string,
-  ) {
-    return this.userService.createUser(
-      userEmail,
-      userPassword,
-      userFirstName,
-      userLastName,
-      userDOB,
-    );
+  signUp(@Body() userInfo: any) {
+    return this.userService.createUser(userInfo);
   }
 
   //   signIn() {
@@ -34,7 +24,14 @@ export class userController {
     return this.userService.getUserInformation(userId);
   }
 
-  //   deleteUser() {}
+  @Post('deleteUser')
+  deleteUser(@Body() userInfo: any) {
+    return this.userService.deleteUser(userInfo.userId);
+  }
 
-  //   updateUser() {}
+  // something is wrong here probably
+  @Post('updateUser')
+  updateUser(@Body() userInfo: any) {
+    return this.userService.updateUserInfo(userInfo.userId, userInfo);
+  }
 }
