@@ -5,10 +5,13 @@ import { PrismaModule } from './prisma/prisma.module';
 import { userController } from './user/user.controller';
 import { userModule } from './user/user.module';
 import { userService } from './user/user.service';
+import { TodosController } from './todos/todos.controller';
+import { TodosService } from './todos/todos.service';
+import { TodosModule } from './todos/todos.module';
 
 @Module({
-  imports: [PrismaModule, userModule],
-  controllers: [AppController, userController],
-  providers: [AppService, userService],
+  imports: [PrismaModule, userModule, TodosModule],
+  controllers: [AppController, userController, TodosController],
+  providers: [AppService, userService, TodosService],
 })
 export class AppModule {}
