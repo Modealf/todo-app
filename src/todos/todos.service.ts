@@ -16,4 +16,16 @@ export class TodosService {
       throw new HttpException('invalid input', HttpStatus.BAD_REQUEST);
     }
   }
+  // new method
+  async getTodosById(userId: string) {
+    try {
+      return await this.prisma.todos.findFirst({
+        where: {
+          userId: userId,
+        },
+      });
+    } catch (error) {
+      throw new HttpException('invalid input', HttpStatus.BAD_REQUEST);
+    }
+  }
 }
