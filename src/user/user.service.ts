@@ -23,7 +23,7 @@ export class userService {
     } catch (error) {
       if (error == PrismaClientKnownRequestError)
         throw new HttpException(
-          'This Email is already in use',
+          'this Email is already in use',
           HttpStatus.CONFLICT,
         );
       else
@@ -135,7 +135,7 @@ export class userService {
         },
       });
     } catch (error) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('user not found', HttpStatus.NOT_FOUND);
     }
   }
 }
