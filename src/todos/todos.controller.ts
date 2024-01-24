@@ -1,4 +1,4 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { TodosService } from './todos.service';
 

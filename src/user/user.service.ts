@@ -55,6 +55,18 @@ export class userService {
 
   // }
 
+  async findUser(userEmail: string) {
+    try {
+      return await this.prisma.user.findFirstOrThrow({
+        where: {
+          email: userEmail,
+        },
+      });
+    } catch (error) {
+      throw new HttpException('user not found', HttpStatus.NOT_FOUND);
+    }
+  }
+
   async deleteUser(userId: string) {
     try {
       return await this.prisma.user.delete({

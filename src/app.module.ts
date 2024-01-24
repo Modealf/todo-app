@@ -8,9 +8,10 @@ import { userService } from './user/user.service';
 import { TodosController } from './todos/todos.controller';
 import { TodosService } from './todos/todos.service';
 import { TodosModule } from './todos/todos.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
-  imports: [PrismaModule, userModule, TodosModule],
+  imports: [PrismaModule, userModule, TodosModule, AuthModule],
   controllers: [AppController, userController, TodosController],
   providers: [AppService, userService, TodosService],
 })
