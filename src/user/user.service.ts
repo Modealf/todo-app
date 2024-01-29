@@ -4,7 +4,7 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import * as argon2 from 'argon2';
 
 @Injectable()
-export class userService {
+export class UserService {
   constructor(private prisma: PrismaService) {}
   // you need to import prisma in your user service and your user module
 

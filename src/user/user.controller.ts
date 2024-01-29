@@ -1,13 +1,12 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { userService } from './user.service';
-import { userInfo } from 'os';
+import { UserService } from './user.service';
 
 @Controller('user')
 export class userController {
   constructor(
     private prisma: PrismaService,
-    private userService: userService,
+    private userService: UserService,
   ) {}
 
   @Post('signup')

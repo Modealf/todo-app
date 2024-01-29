@@ -7,45 +7,45 @@ const prisma = new PrismaClient();
 
 async function main() {
   // create two dummy articles
-  const user1 = await prisma.user.upsert({
-    where: { email: 'Modealf@email.com' },
-    update: {},
-    create: {
-      email: 'Modealf@email.com',
-      firstName: 'Modealf',
-      lastName: 'm',
-      password: '',
-    },
-  });
+  // const user1 = await prisma.user.upsert({
+  //   where: { email: 'Modealf@email.com' },
+  //   update: {},
+  //   create: {
+  //     email: 'Modealf@email.com',
+  //     firstName: 'Modealf',
+  //     lastName: 'm',
+  //     password: '',
+  //   },
+  // });
 
-  const user2 = await prisma.user.upsert({
-    where: { email: 'azoz@email.com' },
-    update: {},
-    create: {
-      email: 'azoz@email.com',
-      firstName: 'Azoz',
-      lastName: 'A',
-      password: '',
-    },
-  });
+  // const user2 = await prisma.user.upsert({
+  //   where: { email: 'azoz@email.com' },
+  //   update: {},
+  //   create: {
+  //     email: 'azoz@email.com',
+  //     firstName: 'Azoz',
+  //     lastName: 'A',
+  //     password: '',
+  //   },
+  // });
 
-  const todo1 = await prisma.todos.upsert({
-    where: { id: '1' },
-    update: {},
-    create: {
-      title: 'Todo 1',
-      userId: user1.id,
-    },
-  });
-  const todo2 = await prisma.todos.upsert({
-    where: { id: '2' },
-    update: {},
-    create: {
-      title: 'Todo 2',
-      userId: user2.id,
-    },
-  });
-  console.log({ user1, user2 }, { todo1, todo2 });
+  // const todo1 = await prisma.todos.upsert({
+  //   where: { id: '1' },
+  //   update: {},
+  //   create: {
+  //     title: 'Todo 1',
+  //     userId: user1.id,
+  //   },
+  // });
+  // const todo2 = await prisma.todos.upsert({
+  //   where: { id: '2' },
+  //   update: {},
+  //   create: {
+  //     title: 'Todo 2',
+  //     userId: user2.id,
+  //   },
+  // });
+  // console.log({ user1, user2 }, { todo1, todo2 });
 }
 
 // execute the main function

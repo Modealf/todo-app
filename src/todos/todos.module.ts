@@ -3,7 +3,7 @@ import { TodosService } from './todos.service';
 import { PrismaModule } from 'src/prisma/prisma.module';
 
 @Module({
-  imports: [TodosService],
+  imports: [],
   controllers: [],
   providers: [PrismaModule],
 })
