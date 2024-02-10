@@ -18,10 +18,10 @@ model User {
   password          String
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
-  todos             Todos[]
+  todos             Todo[]
 }
 
-model Todos {
+model Todo {
   id        String   @id @default(uuid())
   title     String
   completed Boolean  @default(false)

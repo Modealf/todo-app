@@ -1,6 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 import * as argon2 from 'argon2';
 
 @Injectable()
@@ -8,31 +7,34 @@ export class UserService {
   constructor(private prisma: PrismaService) {}
   // you need to import prisma in your user service and your user module
 
-  async createUser(userInfo: any) {
-    try {
-      const hash = await argon2.hash(userInfo.userPassword);
-      return await this.prisma.user.create({
-        data: {
-          email: userInfo.userEmail,
-          password: hash,
-          firstName: userInfo.userFirstName,
-          lastName: userInfo.userLastName,
-          dateOfBirth: userInfo.DOB ?? '',
-        },
-      });
-    } catch (error) {
-      if (error == PrismaClientKnownRequestError)
-        throw new HttpException(
-          'this Email is already in use',
-          HttpStatus.CONFLICT,
-        );
-      else
-        throw new HttpException(
-          'an unknown error has occured',
-          HttpStatus.BAD_REQUEST,
-        );
-    }
-  }
+  // we will replace with a simple register user function that is already validated
+  // moved to auth.service
+
+  // async createUser(userInfo: any) {
+  //   try {
+  //     const hash = await argon2.hash(userInfo.userPassword);
+  //     return await this.prisma.user.create({
+  //       data: {
+  //         email: userInfo.userEmail,
+  //         password: hash,
+  //         firstName: userInfo.userFirstName,
+  //         lastName: userInfo.userLastName,
+  //         dateOfBirth: userInfo.DOB ?? '',
+  //       },
+  //     });
+  //   } catch (error) {
+  //     if (error == PrismaClientKnownRequestError)
+  //       throw new HttpException(
+  //         'this Email is already in use',
+  //         HttpStatus.CONFLICT,
+  //       );
+  //     else
+  //       throw new HttpException(
+  //         'an unknown error has occured',
+  //         HttpStatus.BAD_REQUEST,
+  //       );
+  //   }
+  // }
 
   // async signIn(email: string, password: string) {
   //     try {

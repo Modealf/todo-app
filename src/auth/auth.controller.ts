@@ -10,15 +10,26 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './auth.guard';
+import { userSignUpDto, userSignInDto } from '../user/dtos/user-signup.dto';
+import { UserService } from '../user/user.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private userService: UserService,
+  ) {}
 
   @HttpCode(HttpStatus.OK)
-  @Post('login')
-  signIn(@Body() signInDto: Record<string, any>) {
-    return this.authService.signIn(signInDto.username, signInDto.password);
+  @Post('signIn')
+  signIn(@Body() signInDto: userSignInDto) {
+    return this.authService.signIn(signInDto);
+  }
+
+  // Is this correct?
+  @Post('signUp')
+  signUp(@Body() userInfo: userSignUpDto) {
+    return this.authService.register(userInfo);
   }
 
   // this probably needs change

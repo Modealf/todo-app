@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Todos } from '@prisma/client';
+import { Todo } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
@@ -8,7 +8,7 @@ export class TodosService {
 
   async getAllTodos(userId: string) {
     try {
-      return await this.prisma.todos.findMany({
+      return await this.prisma.todo.findMany({
         where: {
           userId: userId,
         },
@@ -18,9 +18,9 @@ export class TodosService {
     }
   }
   // new method
-  async getTodosById(userId: string) {
+  async getTodoById(userId: string) {
     try {
-      return await this.prisma.todos.findFirst({
+      return await this.prisma.todo.findFirst({
         where: {
           userId: userId,
         },
@@ -33,7 +33,7 @@ export class TodosService {
   // when would this fail???
   async createTodo(userId: string, todoTitle: string) {
     try {
-      return await this.prisma.todos.create({
+      return await this.prisma.todo.create({
         data: {
           title: todoTitle,
           userId: userId,
@@ -47,15 +47,15 @@ export class TodosService {
     }
   }
 
-  async editTodo(todo: Todos, newTitle: string) {
+  async updateTodo(todo: Todo) {
     try {
-      return await this.prisma.todos.update({
+      return await this.prisma.todo.update({
         where: {
           id: todo.id,
         },
         data: {
-          title: newTitle,
-          updatedAt: new Date(),
+          title: todo.title,
+          completed: todo.completed,
         },
       });
     } catch (error) {
@@ -64,48 +64,54 @@ export class TodosService {
         HttpStatus.BAD_REQUEST,
       );
     }
+  }
+
+  async updateManyTodos(todos: Todo[]) {
+    todos.forEach((todo: Todo) => {
+      this.updateTodo(todo);
+    });
   }
   // something is wrong here im not sure what???
-  async markTodoComplete(todo: Todos) {
-    try {
-      return await this.prisma.todos.update({
-        where: {
-          id: todo.id,
-          completed: false,
-        },
-        data: {
-          completed: true,
-          updatedAt: new Date(),
-        },
-      });
-    } catch (error) {
-      throw new HttpException('todo already completed', HttpStatus.BAD_REQUEST);
-    }
-  }
+  // async markTodoComplete(todo: Todo) {
+  //   try {
+  //     return await this.prisma.todo.update({
+  //       where: {
+  //         id: todo.id,
+  //         completed: false,
+  //       },
+  //       data: {
+  //         completed: true,
+  //         updatedAt: new Date(),
+  //       },
+  //     });
+  //   } catch (error) {
+  //     throw new HttpException('todo already completed', HttpStatus.BAD_REQUEST);
+  //   }
+  // }
 
-  async markAllTodosComplete(userId: string) {
-    try {
-      return await this.prisma.todos.updateMany({
-        where: {
-          userId: userId,
-          completed: false,
-        },
-        data: {
-          completed: true,
-          updatedAt: new Date(),
-        },
-      });
-    } catch (error) {
-      throw new HttpException(
-        'an unkown error has occured',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-  }
+  // async markAllTodoComplete(userId: string) {
+  //   try {
+  //     return await this.prisma.todo.updateMany({
+  //       where: {
+  //         userId: userId,
+  //         completed: false,
+  //       },
+  //       data: {
+  //         completed: true,
+  //         updatedAt: new Date(),
+  //       },
+  //     });
+  //   } catch (error) {
+  //     throw new HttpException(
+  //       'an unkown error has occured',
+  //       HttpStatus.BAD_REQUEST,
+  //     );
+  //   }
+  // }
 
-  async deleteTodo(todo: Todos) {
+  async deleteTodo(todo: Todo) {
     try {
-      return await this.prisma.todos.delete({
+      return await this.prisma.todo.delete({
         where: {
           id: todo.id,
         },
@@ -118,7 +124,7 @@ export class TodosService {
     }
   }
   // used unfamiliar property "deleteMany"
-  async deleteAllTodos(userId: string) {
+  async deleteAllTodo(userId: string) {
     try {
       return await this.prisma.user.update({
         where: {
