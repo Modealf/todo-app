@@ -1,6 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Todo } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { updateTodoDto } from './dtos/update-todo.dto';
+import { getTodoByIdDto } from './dtos/get-todo-by-id.dto';
+import { CreateTodoDto } from './dtos/create-todo.dto';
+import { DeleteTodosDto } from './dtos/delete-todo.dto';
+import { getTodoByTitleDto } from './dtos/get-todo-by-title.dto';
 
 @Injectable()
 export class TodosService {
@@ -14,14 +18,56 @@ export class TodosService {
         },
       });
     } catch (error) {
-      throw new HttpException('invalid input', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Could not retrieve todos',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
-  // new method
-  async getTodoById(userId: string) {
+  // userId will be made visible to the front-end for simplicity
+  async getTodoById(dto: getTodoByIdDto) {
     try {
       return await this.prisma.todo.findFirst({
         where: {
+          id: dto.id,
+        },
+      });
+    } catch (error) {
+      throw new HttpException('invalid input', HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async getTodosByTitle(userId: string, dto: getTodoByTitleDto) {
+    try {
+      return await this.prisma.todo.findMany({
+        where: {
+          userId: userId,
+          title: {
+            contains: dto.title,
+          },
+        },
+      });
+    } catch (error) {
+      throw new HttpException('invalid input', HttpStatus.BAD_REQUEST);
+    }
+  }
+  async getCompleteTodo(userId: string) {
+    try {
+      return await this.prisma.todo.findMany({
+        where: {
+          completed: true,
+          userId: userId,
+        },
+      });
+    } catch (error) {
+      throw new HttpException('invalid input', HttpStatus.BAD_REQUEST);
+    }
+  }
+  async getUncompleteTodo(userId: string) {
+    try {
+      return await this.prisma.todo.findMany({
+        where: {
+          completed: false,
           userId: userId,
         },
       });
@@ -30,12 +76,12 @@ export class TodosService {
     }
   }
   // userId from token probably so this should always be correct??, then we just add the todo information and link to the user
-  // when would this fail???
-  async createTodo(userId: string, todoTitle: string) {
+  // when would this fail??? I think never...
+  async createTodo(userId: string, CreateTodoDto: CreateTodoDto) {
     try {
       return await this.prisma.todo.create({
         data: {
-          title: todoTitle,
+          title: CreateTodoDto.title,
           userId: userId,
         },
       });
@@ -47,7 +93,7 @@ export class TodosService {
     }
   }
 
-  async updateTodo(todo: Todo) {
+  async updateTodo(todo: updateTodoDto) {
     try {
       return await this.prisma.todo.update({
         where: {
@@ -66,8 +112,8 @@ export class TodosService {
     }
   }
 
-  async updateManyTodos(todos: Todo[]) {
-    todos.forEach((todo: Todo) => {
+  async updateManyTodos(todos: updateTodoDto[]) {
+    todos.forEach((todo: updateTodoDto) => {
       this.updateTodo(todo);
     });
   }
@@ -109,11 +155,12 @@ export class TodosService {
   //   }
   // }
 
-  async deleteTodo(todo: Todo) {
+  async deleteTodosById(userId: string, deleteTodosDto: DeleteTodosDto) {
     try {
-      return await this.prisma.todo.delete({
+      return await this.prisma.todo.deleteMany({
         where: {
-          id: todo.id,
+          userId: userId,
+          id: { in: deleteTodosDto.ids },
         },
       });
     } catch (error) {
@@ -124,16 +171,11 @@ export class TodosService {
     }
   }
   // used unfamiliar property "deleteMany"
-  async deleteAllTodo(userId: string) {
+  async deleteAllTodos(userId: string) {
     try {
-      return await this.prisma.user.update({
+      return await this.prisma.todo.deleteMany({
         where: {
           id: userId,
-        },
-        data: {
-          todos: {
-            deleteMany: {},
-          },
         },
       });
     } catch (error) {

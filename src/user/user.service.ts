@@ -1,6 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import * as argon2 from 'argon2';
+import { userUpdateDto } from './dtos/user-update.dto';
+import { userChangePasswordDto } from './dtos/user-changepassword.dto';
 
 @Injectable()
 export class UserService {
@@ -57,6 +59,7 @@ export class UserService {
 
   // }
 
+  // what is this?
   async findUser(userEmail: string) {
     try {
       return await this.prisma.user.findFirstOrThrow({
@@ -103,19 +106,19 @@ export class UserService {
   // }
 
   // we will use jwt tokens to get the user id
-  async updateUserInfo(userId: string, userInfo: any) {
+  async updateUserInfo(updateDto: userUpdateDto, userId: string) {
     try {
-      const hash = await argon2.hash(userInfo.userPassword);
+      const hash = await argon2.hash(updateDto.password);
       return await this.prisma.user.update({
         where: {
           id: userId,
         },
         data: {
-          email: userInfo.userEmail,
+          email: updateDto.email,
           password: hash,
-          firstName: userInfo.userFirstName,
-          lastName: userInfo.userLastName,
-          dateOfBirth: userInfo.DOB ?? '',
+          firstName: updateDto.firstName,
+          lastName: updateDto.lastName,
+          dateOfBirth: updateDto.dateOfBirth ?? '',
         },
       });
     } catch (error) {
@@ -151,5 +154,21 @@ export class UserService {
     } catch (error) {
       throw new HttpException('user not found', HttpStatus.NOT_FOUND);
     }
+  }
+  async changeUserPassword(
+    passwordChangeDto: userChangePasswordDto,
+    userId: string,
+  ) {
+    try {
+      return await this.prisma.user.update({
+        where: {
+          id: userId,
+          password: passwordChangeDto.oldpassword,
+        },
+        data: {
+          password: passwordChangeDto.newpassword,
+        },
+      });
+    } catch (error) {}
   }
 }

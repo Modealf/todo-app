@@ -9,7 +9,8 @@ import * as argon2 from 'argon2';
 import { UserService } from 'src/user/user.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { userSignUpDto, userSignInDto } from '../user/dtos/user-signup.dto';
+import { userSignUpDto } from '../user/dtos/user-signup.dto';
+import { userSignInDto } from '../user/dtos/user-signin.dto';
 import { JwtPayload } from './types/jwtPayload';
 
 @Injectable()
