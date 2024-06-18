@@ -69,18 +69,27 @@ export class TodosController {
   }
 
   @Post('')
-  create(@GetCurrentUserId() userId: string, CreateTodoDto: CreateTodoDto) {
+  create(
+    @GetCurrentUserId() userId: string,
+    @Body() CreateTodoDto: CreateTodoDto,
+  ) {
     return this.todosService.createTodo(userId, CreateTodoDto);
   }
 
   @Put('')
-  update(@Body() updateTodoDto: updateTodoDto) {
-    return this.todosService.updateTodo(updateTodoDto);
+  update(
+    @GetCurrentUserId() userId: string,
+    @Body() updateTodoDto: updateTodoDto,
+  ) {
+    return this.todosService.updateTodo(userId, updateTodoDto);
   }
 
   @Put('/updateMany')
-  updateMany(@Body() todos: updateTodoDto[]) {
-    return this.todosService.updateManyTodos(todos);
+  updateMany(
+    @GetCurrentUserId() userId: string,
+    @Body() todos: updateTodoDto[],
+  ) {
+    return this.todosService.updateManyTodos(userId, todos);
   }
 
   @Delete()
@@ -97,7 +106,7 @@ export class TodosController {
 
   // Want to change batch to something else
   @Delete('batch')
-  async deleteTodosByIds(
+  async deleteTodosById(
     @GetCurrentUserId() userId: string,
     @Body() deleteTodosDto: DeleteTodosDto,
   ) {

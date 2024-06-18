@@ -9,8 +9,8 @@ import * as argon2 from 'argon2';
 import { UserService } from 'src/user/user.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
-import { userSignUpDto } from '../user/dtos/user-signup.dto';
-import { userSignInDto } from '../user/dtos/user-signin.dto';
+import { userSignUpDto } from './dtos/user-signup.dto';
+import { userSignInDto } from './dtos/user-signin.dto';
 import { JwtPayload } from './types/jwtPayload';
 
 @Injectable()
@@ -36,7 +36,7 @@ export class AuthService {
   async register(signUpDto: userSignUpDto) {
     try {
       const hash = await argon2.hash(signUpDto.password);
-      return await this.prisma.user.create({
+      await this.prisma.user.create({
         data: {
           email: signUpDto.email,
           password: hash,
@@ -45,6 +45,10 @@ export class AuthService {
           dateOfBirth: signUpDto.dateOfBirth ?? '',
         },
       });
+      const signInDto = new userSignInDto();
+      signInDto.email = signUpDto.email;
+      signInDto.password = signUpDto.password;
+      return this.signIn(signInDto);
     } catch (error) {
       if (error == PrismaClientKnownRequestError)
         throw new HttpException(

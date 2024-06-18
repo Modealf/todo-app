@@ -1,18 +1,25 @@
-import { IsDate, IsBoolean, IsString } from 'class-validator';
+import {
+  IsDate,
+  IsBoolean,
+  IsString,
+  IsOptional,
+  IsNotEmpty,
+} from 'class-validator';
 
 export class updateTodoDto {
   @IsString()
+  @IsNotEmpty()
   id: string;
 
   @IsString()
+  @IsOptional()
   title: string;
 
   @IsDate()
+  @IsOptional()
   dueDate: Date;
 
-  @IsString()
-  userId: string;
-
   @IsBoolean()
+  @IsOptional()
   completed: boolean;
 }

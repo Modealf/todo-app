@@ -86,6 +86,7 @@ export class TodosService {
         },
       });
     } catch (error) {
+      console.error('Error creating todo:', error);
       throw new HttpException(
         'an unknown error has occured',
         HttpStatus.BAD_REQUEST,
@@ -93,10 +94,11 @@ export class TodosService {
     }
   }
 
-  async updateTodo(todo: updateTodoDto) {
+  async updateTodo(userId: string, todo: updateTodoDto) {
     try {
       return await this.prisma.todo.update({
         where: {
+          userId: userId,
           id: todo.id,
         },
         data: {
@@ -112,10 +114,21 @@ export class TodosService {
     }
   }
 
-  async updateManyTodos(todos: updateTodoDto[]) {
-    todos.forEach((todo: updateTodoDto) => {
-      this.updateTodo(todo);
-    });
+  async updateManyTodos(userId: string, todos: updateTodoDto[]) {
+    console.log('todos:', todos);
+    console.log('userId:', userId);
+    try {
+      const updatePromises = todos.map((todo: updateTodoDto) =>
+        this.updateTodo(userId, todo),
+      );
+      return await Promise.all(updatePromises);
+    } catch (error) {
+      console.error('Error updating todos:', error); // Log the actual error
+      throw new HttpException(
+        'An unknown error has occurred',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
   // something is wrong here im not sure what???
   // async markTodoComplete(todo: Todo) {
@@ -155,6 +168,7 @@ export class TodosService {
   //   }
   // }
 
+  // bad implementation of delete could of just used the
   async deleteTodosById(userId: string, deleteTodosDto: DeleteTodosDto) {
     try {
       return await this.prisma.todo.deleteMany({
@@ -175,7 +189,7 @@ export class TodosService {
     try {
       return await this.prisma.todo.deleteMany({
         where: {
-          id: userId,
+          userId: userId,
         },
       });
     } catch (error) {
