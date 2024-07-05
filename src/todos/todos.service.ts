@@ -115,13 +115,20 @@ export class TodosService {
   }
 
   async updateManyTodos(userId: string, todos: updateTodoDto[]) {
-    console.log('todos:', todos);
-    console.log('userId:', userId);
     try {
-      const updatePromises = todos.map((todo: updateTodoDto) =>
-        this.updateTodo(userId, todo),
-      );
-      return await Promise.all(updatePromises);
+      const dbPromises = [];
+      todos.forEach(async (updateTodoDto) => {
+        dbPromises.push(
+          this.prisma.todo.update({
+            where: {
+              userId: userId,
+              id: updateTodoDto.id,
+            },
+            data: updateTodoDto,
+          }),
+        );
+      });
+      return await Promise.all(dbPromises);
     } catch (error) {
       console.error('Error updating todos:', error); // Log the actual error
       throw new HttpException(
